@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Coordenadas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-700 text-white flex items-center justify-center h-screen">
+  <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center mb-6">🌍 Conversor de Coordenadas</h1>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm mb-1">Latitude (decimal):</label>
+        <input id="lat" type="number" step="any" placeholder="-22.575417"
+               class="w-full px-4 py-2 rounded-md bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none">
+      </div>
+
+      <div>
+        <label class="block text-sm mb-1">Longitude (decimal):</label>
+        <input id="lon" type="number" step="any" placeholder="-47.388118"
+               class="w-full px-4 py-2 rounded-md bg-gray-700 focus:ring-2 focus:ring-blue-500 outline-none">
+      </div>
+
+      <button onclick="converter()"
+              class="w-full bg-blue-600 hover:bg-blue-700 transition-all rounded-md py-2 font-semibold mt-4">
+        Converter
+      </button>
+
+      <div id="resultado" class="mt-6 text-center text-lg font-mono opacity-0 transition-opacity duration-500">
+        <!-- Resultado aparece aqui -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function decimalParaDMS(valor, isLat) {
+      const direcao = valor < 0 ? (isLat ? 'S' : 'W') : (isLat ? 'N' : 'E');
+      const abs = Math.abs(valor);
+      const graus = Math.floor(abs);
+      const minutosFloat = (abs - graus) * 60;
+      const minutos = Math.floor(minutosFloat);
+      const segundos = ((minutosFloat - minutos) * 60).toFixed(2);
+      return `${graus}° ${minutos}' ${segundos}" ${direcao}`;
+    }
+
+    function converter() {
+      const lat = parseFloat(document.getElementById("lat").value);
+      const lon = parseFloat(document.getElementById("lon").value);
+      const res = document.getElementById("resultado");
+
+      if (isNaN(lat) || isNaN(lon)) {
+        res.innerHTML = "⚠️ Insira valores válidos para latitude e longitude.";
+        res.classList.remove("opacity-0");
+        return;
+      }
+
+      const dmsLat = decimalParaDMS(lat, true);
+      const dmsLon = decimalParaDMS(lon, false);
+
+      res.innerHTML = `
+        <p class="text-green-400">📍 Coordenadas convertidas:</p>
+        <p>${dmsLat}, ${dmsLon}</p>
+      `;
+      res.classList.remove("opacity-0");
+    }
+  </script>
+</body>
+</html>
